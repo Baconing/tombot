@@ -1,0 +1,26 @@
+{
+  "name": "tombothub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf dist",
+    "rebuild": "npm run build && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^1.0.1",
+    "@supabase/supabase-js": "^1.35.4",
+    "discord.js": "^14.0.3",
+    "dotenv": "^16.0.1",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "eslint": "^8.20.0",
+    "typescript": "^4.7.4"
+  }
+}
