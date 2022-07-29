@@ -1,6 +1,7 @@
-import { BaseInteraction, ChatInputCommandInteraction, MessageContextMenuCommandInteraction } from "discord.js";
+import { BaseInteraction, ChatInputCommandInteraction } from "discord.js";
 import { errorHandler } from "../util/errorHandler";
 import { bot } from "../index";
+import { BotError } from "../structs/BotError";
 
 export default {
     name: "interactionCreate",
@@ -16,12 +17,12 @@ export default {
                 if (chatInteraction.user!.id == process.env.OWNERID!) {
                     commandRan = true;
                     try {
-                        command!.execute(chatInteraction);
-                    } catch (e: any) {
-                        await chatInteraction.reply(errorHandler(e));
+                        await command!.execute(chatInteraction);
+                    } catch (error) {
+                        await chatInteraction.reply({ embeds: [errorHandler((error as BotError))], ephemeral: true });
                     }
                 } else {
-                    await chatInteraction.reply("You don't have permission to run this command.");
+                    await chatInteraction.reply({ embeds: [errorHandler(new BotError("User Missing Permissions", "uperms"))], ephemeral: true });
                 }
             }
 
@@ -30,20 +31,20 @@ export default {
                     if (chatInteraction.memberPermissions!.has(permission) && !commandRan) {
                         commandRan = true;
                         try {
-                            command!.execute(chatInteraction);
-                        } catch (e: any) {
-                            await chatInteraction.reply(errorHandler(e));
+                            await command!.execute(chatInteraction);
+                        } catch (error) {
+                            await chatInteraction.reply({ embeds: [errorHandler((error as BotError))], ephemeral: true });
                         }
                     }
                 });
                 if (!commandRan) {
-                    await chatInteraction.reply("You don't have permission to run this command.");
+                    await chatInteraction.reply({ embeds: [errorHandler(new BotError("User Missing Permissions", "uperms"))], ephemeral: true });
                 }
             } else if (!commandRan) {
                 try {
-                    command!.execute(chatInteraction);
-                } catch (e: any) {
-                    await chatInteraction.reply(errorHandler(e));
+                    await command!.execute(chatInteraction);
+                } catch (error) {
+                    await chatInteraction.reply({ embeds: [errorHandler((error as BotError))], ephemeral: true });
                 }
             }
         }
