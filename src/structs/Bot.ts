@@ -17,13 +17,13 @@ export class Bot {
         const events = fs.readdirSync(path.join(__dirname, "..", "events")).filter(file => file.endsWith(".js") || file.endsWith(".ts"));
         for (const file of events) {
             const event = await import(path.join(__dirname, "..", "events", `${file}`));
-            if (event.once) {
-                this.client.once(event.name, (...args) => {
+            if (event.default.once) {
+                this.client.once(event.default.name, (...args) => {
                     event.default.execute(...args);
                 });
             } else {
-                this.client.on(event.name, (...args) => {
-                    event.execute(...args);
+                this.client.on(event.default.name, (...args) => {
+                    event.default.execute(...args);
                 });
             }
         }
@@ -34,7 +34,7 @@ export class Bot {
     
         for (const file of commandFiles) {
           const command = await import(path.join(__dirname, "..", "commands", `${file}`));
-          this.commands.set(command.default.name, command.default);
+          this.commands.set(command.default.data.name, command.default);
         }
 
         const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
